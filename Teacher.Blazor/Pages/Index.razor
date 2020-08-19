@@ -1,0 +1,22 @@
+﻿@page "/"
+@using Teacher.Engine
+@using Teacher.Engine.Ui
+
+<ConsoleBlock @ref="_console"/>
+
+@code
+{
+    private ConsoleBlock _console;
+    private Task _quiz;
+
+    protected override void OnAfterRender(bool firstTime)
+    {
+        if (firstTime)
+        {
+            _quiz = StartProcessing();
+        }
+    }
+
+    private async Task StartProcessing() =>
+        await new ConsoleUi(_console).Run();
+}

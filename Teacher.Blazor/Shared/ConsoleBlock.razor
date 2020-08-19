@@ -1,0 +1,79 @@
+﻿@implements Teacher.Engine.Ui.IConsole
+@inject IJSRuntime JSRuntime
+
+<div id="outer-screen">
+    <div id="inner-screen">
+        <div id="output-outer"><div id="output">@((MarkupString)Output)</div></div>
+        <div id="blank-line">&nbsp;</div>
+        <div id="input-row">
+            <span>&gt;&nbsp;</span><input id="input" @bind="Input" @bind:event="oninput" type="text" @onkeydown="OnKeyDown" @onkeyup="Run" @ref="_input"/>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string Output { get; set; } = "";
+    private string Input { get; set; } = "";
+    private ElementReference _input;
+
+    private TaskCompletionSource<string> _inputTask = new TaskCompletionSource<string>();
+
+    protected override async Task OnAfterRenderAsync(bool firstTime)
+    {
+        if (firstTime)
+        {
+            await JSRuntime.InvokeVoidAsync("focusControl", _input);
+        }
+    }
+
+    private void OnKeyDown(KeyboardEventArgs e)
+    {
+        /*if (e.Key == "ArrowUp" && _historyIndex > 0)
+        {
+            _historyIndex--;
+            Input = _history[_historyIndex];
+        }
+        else if (e.Key == "ArrowDown" && _historyIndex + 1 < _history.Count)
+        {
+            _historyIndex++;
+            Input = _history[_historyIndex];
+        }
+        // todo:  doesn't work right when typing new command.  Requires Enter to be pressed first sometimes
+        // has to do with DOM focus I think
+        // currently handling this with javascript as well
+        else if (e.Key == "Escape")
+        {
+            Input = "";
+            _historyIndex = _history.Count;
+        }*/
+    }
+
+    private void Run(KeyboardEventArgs e)
+    {
+        if (e.Key != "Enter")
+        {
+            return;
+        }
+
+        var code = Input;
+        WriteLine(Input);
+        var tsc = _inputTask;
+        _inputTask = new TaskCompletionSource<string>();
+        tsc.SetResult(Input);
+        Input = "";
+
+    }
+
+    public Task<string> ReadLine() => _inputTask.Task;
+    public void WriteLine(string line)
+    {
+        //Console.WriteLine(line);
+        Output += "\r\n" + line;
+        StateHasChanged();
+    }
+
+    public void Clear()
+    {
+        Output = string.Empty;
+    }
+}
