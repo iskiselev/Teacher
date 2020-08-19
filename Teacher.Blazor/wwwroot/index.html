@@ -5,6 +5,15 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Teacher.Blazor</title>
+    <script type="text/javascript">
+        let baseUrl = location.pathname.replace("index.html", "");
+        if (!baseUrl.endsWith("/")) {
+            baseUrl += "/";
+        }
+        var appBase = document.createElement('base');
+        appBase.href = baseUrl;
+        document.head.appendChild(appBase);
+    </script>
     <link href="css/app.css" rel="stylesheet" />
             <link href="css/site.css" rel="stylesheet" />
             <script>
