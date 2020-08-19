@@ -1,5 +1,8 @@
-﻿namespace Teacher.Engine
+﻿using System.Diagnostics;
+
+namespace Teacher.Engine
 {
+    [DebuggerDisplay("{Question} = {CorrectAnswer}")]
     public class Quiz
     {
         public Quiz(string question, string correctAnswer)
