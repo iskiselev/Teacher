@@ -17,8 +17,9 @@
     <link href="css/app.css" rel="stylesheet" />
             <link href="css/site.css" rel="stylesheet" />
             <script>
-                function focusControl(control) {
+                function autoFocusControl(control) {
                     control.focus();
+                    control.addEventListener("blur", () => control.focus());
                 }
             </script>
 </head>
